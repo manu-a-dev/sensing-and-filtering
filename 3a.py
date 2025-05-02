@@ -6,12 +6,24 @@ WRITE = True # set to True if you want to write the data to a CSV file
 wall = [(0.1, 4.), (3., 0.1)] # (x,y) endpoints of wall
 robot = [0., 0., 0.] # (x, y, theta)
 
-# ADD YOUR CODE HERE
 # input: 
 def fit_line(data):
-    # return default values (change)
-    m = 1
-    c = 1
+    # yoinked from the bottom, convert to cartesian
+    cartesian_coords = np.array([[d*np.cos(theta), d*np.sin(theta)] for (d, theta) in data])
+
+    # all rows of the first column
+        # our x-values
+    x = cartesian_coords[:, 0]
+
+    # all rows of the second column
+        # our y-values
+    y = cartesian_coords[:, 1]
+
+    # sauce: https://www.statology.org/numpy-least-squares-fit/
+        # m = slope
+        # c = y-intercept
+    m, c = np.linalg.lstsq(np.vstack([x, np.ones(len(x))]).T, y, rcond=None)[0]
+
     return m, c
 
 # plots results (will open a window / requires Xforwarding to view over SSH)
